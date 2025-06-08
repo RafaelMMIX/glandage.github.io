@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Chrono du Glandeur</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', sans-serif;
+      background-color: #222;
+      color: #fff;
+      text-align: center;
+      padding-top: 100px;
+    }
+
+    #timer {
+      font-size: 3em;
+      margin-bottom: 30px;
+    }
+
+    button {
+      background-color: #ff3e3e;
+      border: none;
+      padding: 15px 30px;
+      color: white;
+      font-size: 1.2em;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #e22;
+    }
+
+    #message {
+      margin-top: 30px;
+      font-size: 1.2em;
+      color: #ccc;
+      min-height: 40px;
+    }
+
+    #stats {
+      margin-top: 20px;
+      font-size: 1.1em;
+      font-style: italic;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>⏳ Temps passé à rien faire :</h1>
+  <div id="timer">00:00:00</div>
+
+  <div id="button-container">
+    <button id="resetButton" onclick="resetTimer()">Je jure de reprendre ma vie en main</button>
+  </div>
+
+  <div id="message"></div>
+  <div id="stats"></div>
+
+  <script>
+    const timerElement = document.getElementById("timer");
+    const messageElement = document.getElementById("message");
+    const statsElement = document.getElementById("stats");
+    const buttonContainer = document.getElementById("button-container");
+
+    let seconds = parseInt(localStorage.getItem("chronoGlandeur")) || 0;
+    let clickCount = parseInt(localStorage.getItem("clickCount")) || 0;
+    let buttonBlockedUntil = parseInt(localStorage.getItem("blockedUntil")) || 0;
+
+    const phrases = [
+      "Tu pourrais apprendre le HTML/CSS à la place...",
+      "Toujours là ? Tu veux une médaille ?",
+      "Tu crois qu’on a l’éternité ?",
+      "Encore un peu et tu bats un record mondial.",
+      "Les minutes passent, mais ton avenir, lui ?",
+      "Si tu étais payé pour glander, t’aurais déjà une belle petite vila à la plage jpenses.",
+      "Pense à ce que t’aurais pu accomplir.",
+      "Fais une pause... ou pas.",
+      "Le monde avance, toi t’es planté là.",
+      "Un jour t’auras 80 ans et tu repenseras à ce site. Peut-être.",
+      "Tu sais que tu peux faire autre chose, hein ?",
+      "Le temps, c’est de l’argent. Et là, tu le gaspilles.",
+      "Tu pourrais apprendre à coder, mais non, tu préfères rester ici.",
+      "C'est pour ça t'as pas de meuf",
+      "Tu sais que tu pourrais faire autre chose de ta vie, hein ?",
+      "J'ai entendu dire que les plantes grandissent plus vite que toi en ce moment.",
+      "T'as pas d'amis mdrrr ?",
+      "LOL, tu pensais que j'allais te dire quelque chose de profond ?",
+      "Tu sais que tu pourrais apprendre à faire des sites web, hein ? Gagner de l'argent et tout et tout.",
+      "Ne pas oublier de respirer, hein. C'est important.",
+      "On pourrait faire un concours de glandage, tu crois qu'on gagnerait ?",
+      "On peux plus rien pour toi..."
+    ];
+
+    function updateTimer() {
+      let seconds = parseInt(localStorage.getItem("chronoGlandeur")) || 0;
+      let phonesSold = seconds * 47.5; // initialisation
+
+      let lastTime = Date.now();
+
+      function updatePhonesSold() {
+      const now = Date.now();
+      const elapsedMs = now - lastTime;
+      lastTime = now;
+
+      phonesSold += 0.0475 * elapsedMs;
+
+      statsElement.textContent = `📱 Environ ${Math.floor(phonesSold).toLocaleString()} smartphones vendus depuis que tu es ici.`;
+
+      requestAnimationFrame(updatePhonesSold);
+      }
+
+      updatePhonesSold();
+
+      const now = Date.now();
+      if (now < buttonBlockedUntil) {
+        document.getElementById("resetButton").style.display = "none";
+      } else {
+        document.getElementById("resetButton").style.display = "inline-block";
+      }
+
+      seconds++;
+      localStorage.setItem("chronoGlandeur", seconds);
+
+      const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
+      const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+      const secs = String(seconds % 60).padStart(2, '0');
+      timerElement.textContent = `${hrs}:${mins}:${secs}`;
+
+      // Alerte à 10 minutes
+      if (seconds === 600) {
+        alert("⚠️ 10 minutes à rien faire… Impressionnant.");
+      }
+
+      if (seconds === 3600) {
+        alert("⏰ Une heure à glander… Tu as un talent pour ça !");
+      }
+
+      if (seconds === 7200) {
+        alert("⏳ Deux heures… Tu es vraiment un champion du glandage !");
+      }
+
+      if (seconds === 10800) {
+        alert("⏰ Trois heures… Tu es officiellement le roi du glandage !");
+      }
+
+      if (seconds === 14400) {
+        alert("⏳ Quatre heures… Tu as atteint un niveau de glandeur légendaire !");
+      }
+
+      if (seconds === 18000) {
+        alert("⏰ Cinq heures… Tu es un véritable maître du glandage !");
+      }
+
+      // Mise à jour des stats à chaque seconde
+      // Mise à jour stats toutes les secondes avec une estimation réaliste
+      statsElement.textContent = `📱 Environ ${phonesSold.toLocaleString()} smartphones vendus depuis que tu es ici.`;
+    }
+
+    // Messages aléatoires toutes les 30 secondes
+    setInterval(() => {
+      const randomMsg = phrases[Math.floor(Math.random() * phrases.length)];
+      messageElement.textContent = randomMsg;
+    }, 30000);
+
+    function resetTimer() {
+  clickCount++;
+  localStorage.setItem("clickCount", clickCount);
+
+  const now = Date.now();
+
+  if (clickCount >= 5) {
+    const blockDuration = 5 * ( 60 * 1000 ); // 5 minutes
+    const unblockTime = now + blockDuration;
+
+    localStorage.setItem("blockedUntil", unblockTime);
+    buttonBlockedUntil = unblockTime; // Met à jour la variable
+
+    // Masque le bouton immédiatement
+    document.getElementById("resetButton").style.display = "none";
+    messageElement.textContent = "🚫 Tu mens, je t’enlève le bouton pendant 5 minutes.";
+    clickCount = 0;
+    localStorage.setItem("clickCount", "0");
+
+    // Affiche à nouveau le bouton après 5 minutes
+    setTimeout(() => {
+      document.getElementById("resetButton").style.display = "inline-block";
+      localStorage.setItem("blockedUntil", "0"); // Réinitialise proprement
+    }, blockDuration);
+  } else {
+    if (confirm("T’es sûr ? T’effaces toute ta gloire ?")) {
+      seconds = 0;
+      localStorage.setItem("chronoGlandeur", "0");
+      messageElement.textContent = "";
+      statsElement.textContent = "";
+      timerElement.textContent = "00:00:00";
+      alert("Bon… On y croit hein.");
+    }
+  }
+}
+
+
+    // Mise à jour du chrono chaque seconde
+    setInterval(updateTimer, 1000);
+    updateTimer(); // Initialisation
+  </script>
+
+</body>
+</html>
