@@ -59,6 +59,83 @@
   <div id="message"></div>
   <div id="stats"></div>
 
+  <style>
+  #zone-interdite {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 160px;
+    height: 160px;
+    background: red;
+    color: white;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: sans-serif;
+    border: 3px solid black;
+    border-radius: 12px;
+    z-index: 9999;
+    cursor: not-allowed;
+    animation: clignote 1s infinite;
+  }
+
+  @keyframes clignote {
+    0% { opacity: 1; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1; }
+  }
+
+  #punition {
+    display: none; /* ❗ C’est bien ça qu’on veut */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    color: lime;
+    font-family: monospace;
+    font-size: 2rem;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  #punition button {
+    margin-top: 20px;
+    background: lime;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 10px;
+    color: black;
+  }
+</style>
+
+<div id="zone-interdite">Ne cliquez pas ici</div>
+
+<div id="punition">
+  <div>Tu as cliqué. <br> Et maintenant ? 🤨</div>
+  <button onclick="fermerPunition()">Je regrette...</button>
+</div>
+
+<script>
+  const punition = document.getElementById("punition");
+
+  document.getElementById("zone-interdite").addEventListener("click", () => {
+    punition.style.display = "flex";
+  });
+
+  function fermerPunition() {
+    punition.style.display = "none";
+  }
+</script>
+
+
   <script>
     const timerElement = document.getElementById("timer");
     const messageElement = document.getElementById("message");
