@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Succès débloqués</title>
+  <style>
+    body {
+      background-color: #1c1c1c;
+      color: white;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+
+    h1 {
+      margin-top: 40px;
+      font-size: 2.2em;
+    }
+
+    #achievements-list {
+      display: grid;
+      gap: 15px;
+      max-width: 600px;
+      width: 90%;
+      margin: 30px auto;
+    }
+
+    .achievement {
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #555;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+      transition: 0.3s;
+    }
+
+    .unlocked {
+      background-color: #2c7a2c;
+      color: #fff;
+    }
+
+    .locked {
+      background-color: #444;
+      color: #aaa;
+    }
+
+    .leaderboard {
+      margin-top: 40px;
+      background: #222;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+
+    .leaderboard h2 {
+      margin-top: 0;
+      text-align: center;
+    }
+
+    .leaderboard ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .leaderboard li {
+      margin: 8px 0;
+      font-size: 1.1em;
+    }
+
+    .you {
+      color: gold;
+      font-weight: bold;
+    }
+
+    .nav-buttons {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  right: 15px;
+  display: flex;
+  justify-content: space-between;
+  z-index: 1000;
+}
+
+.nav-buttons button {
+  background-color: #444;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.2s;
+}
+
+.nav-buttons button:hover {
+  background-color: #666;
+}
+
+  </style>
+</head>
+<body>
+
+    <div class="nav-buttons">
+  <button onclick="window.location.href='prout.html'" class="nav-left">🏠 Retour</button>
+  <button onclick="window.location.href='achievement.html'" class="nav-right">🏆 Succès</button>
+</div>
+
+  <h1>🎯 Mes Succès</h1>
+  <div id="achievements-list"></div>
+
+  <div class="leaderboard">
+    <h2>🏆 Ton pourcentage de succès débloqués</h2>
+    <ul id="leaderboard-list">
+      <!-- Auto-rempli par JS -->
+    </ul>
+  </div>
+
+  <script>
+// Liste des succès
+const allAchievements = {
+  "pet_master": {
+    title: "💩 Maître du Pet",
+    description: "Tu fais ça trop bien..."
+  },
+  "rickroll_survivor": {
+    title: "😵 Erreur fatale",
+    description: "Tu n’en sortiras pas indemne."
+  },
+  "click_spammer": {
+    title: "👆 Spam Master",
+    description: "Tu connais que ce geste toi 😒"
+  },
+  "troll_finder": {
+    title: "🕵️ Détective Troll",
+    description: "Tu as trouvé l’un des secrets..."
+  },
+  "dev_mode": {
+    title: "👻 Tu ne devrais pas être là",
+    description: "Tu touches à ce qu’il ne faut pas."
+  },
+  "sleepy": {
+    title: "🐢 Trop lent",
+    description: "T'es mort ou quoi ?"
+  }
+};
+
+const achievementsContainer = document.getElementById("achievements-list");
+let unlockedCount = 0;
+const totalCount = Object.keys(allAchievements).length;
+
+for (const [key, value] of Object.entries(allAchievements)) {
+  const unlocked = localStorage.getItem("ach_" + key);
+  if (unlocked) unlockedCount++;
+
+  const div = document.createElement("div");
+  div.className = "achievement " + (unlocked ? "unlocked" : "locked");
+
+  div.innerHTML = `<strong style="font-size: 1.2em;">${value.title}</strong><br>
+                   <span>${value.description}</span>
+                   ${!unlocked ? '<br><em style="font-size: 0.8em;">Non débloqué</em>' : ''}`;
+
+  achievementsContainer.appendChild(div);
+}
+
+// 🎉 Leaderboard factice
+const leaderboard = [
+  { name: "Toi", score: Math.round((unlockedCount / totalCount) * 100) } // Joueur réel
+];
+
+leaderboard.sort((a, b) => b.score - a.score);
+
+const lbList = document.getElementById("leaderboard-list");
+leaderboard.forEach(entry => {
+  const li = document.createElement("li");
+  li.textContent = `${entry.name}, tu as ${entry.score}% des succès !`;
+  if (entry.name === "Toi") li.classList.add("you");
+  lbList.appendChild(li);
+});
+</script>
+
+
+</body>
+</html>
