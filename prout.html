@@ -47,6 +47,27 @@
     }
   </style>
 </head>
+
+<script>
+  let trollSequence = "";
+  const secretCode = "troll";
+
+  window.addEventListener("keydown", (e) => {
+    trollSequence += e.key.toLowerCase();
+
+    // Garder uniquement les 5 dernières lettres
+    if (trollSequence.length > secretCode.length) {
+      trollSequence = trollSequence.slice(-secretCode.length);
+    }
+
+    if (trollSequence === secretCode) {
+      window.location.href = "rickroll.html";
+    }
+  });
+</script>
+
+
+
 <body>
 
   <h1>⏳ Temps passé à rien faire :</h1>
