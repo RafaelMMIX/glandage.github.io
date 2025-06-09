@@ -45,12 +45,39 @@
       font-style: italic;
       color: #aaa;
     }
+
+.nav-buttons {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  right: 15px;
+  display: flex;
+  justify-content: space-between;
+  z-index: 1000;
+}
+
+.nav-buttons button {
+  background-color: #444;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.2s;
+}
+
+.nav-buttons button:hover {
+  background-color: #666;
+}
+
+
   </style>
 </head>
 
 <script>
   let trollSequence = "";
-  const secretCode = "caca";
+  const secretCode = "troll";
 
   window.addEventListener("keydown", (e) => {
     trollSequence += e.key.toLowerCase();
@@ -69,6 +96,11 @@
 
 
 <body>
+
+  <div class="nav-buttons">
+  <button onclick="window.location.href='prout.html'" class="nav-left">🏠 Retour</button>
+  <button onclick="window.location.href='achievement.html'" class="nav-right">🏆 Succès</button>
+</div>
 
   <h1>⏳ Temps passé à rien faire :</h1>
   <div id="timer">00:00:00</div>
@@ -100,9 +132,9 @@
 
   <style>
   #zone-interdite {
-    position: fixed;
-    top: 20px;
-    left: 20px;
+    position: static;
+    top: 200px;
+    left: 200px;
     width: 160px;
     height: 160px;
     background: red;
@@ -158,7 +190,7 @@
 <div id="zone-interdite">Ne cliquez pas ici</div>
 
 <div id="punition">
-  <div>Tu as cliqué. <br> Et maintenant ? 🤨</div>
+  <div>Tu as cliqué... <br> Et maintenant ? 🤨</div>
   <button onclick="fermerPunition()">Je regrette...</button>
 </div>
 
@@ -518,6 +550,60 @@ function resetIdleTimer() {
 });
 resetIdleTimer();
 </script>
-  
+
+<h2>🎯 Mes Succès</h2>
+<div id="achievements-list" style="display: grid; gap: 10px; max-width: 600px; align-self: center;"></div>
+
+<script>
+const allAchievements = {
+  "pet_master": {
+    title: "💩 Maître du Pet",
+    description: "Tu fais ça trop bien..."
+  },
+  "rickroll_survivor": {
+    title: "😵 Erreur fatale",
+    description: "Tu n’en sortiras pas indemne."
+  },
+  "click_spammer": {
+    title: "👆 Spam Master",
+    description: "Tu connais que ce geste toi 😒"
+  },
+  "troll_finder": {
+    title: "🕵️ Détective Troll",
+    description: "Tu as trouvé l’un des secrets..."
+  },
+  "dev_mode": {
+    title: "👻 Tu ne devrais pas être là",
+    description: "Tu touches à ce qu’il ne faut pas."
+  },
+  "sleepy": {
+    title: "🐢 Trop lent",
+    description: "T'es mort ou quoi ?"
+  }
+};
+
+const achievementsContainer = document.getElementById("achievements-list");
+
+for (const [key, value] of Object.entries(allAchievements)) {
+  const unlocked = localStorage.getItem("ach_" + key);
+
+  const div = document.createElement("div");
+  div.style.padding = "12px";
+  div.style.borderRadius = "8px";
+  div.style.border = "1px solid #ccc";
+  div.style.backgroundColor = unlocked ? "#292" : "#444";
+  div.style.color = unlocked ? "#fff" : "#999";
+  div.style.transition = "0.3s";
+  div.style.boxShadow = "0 0 5px rgba(0,0,0,0.2)";
+  div.style.display = "flex";
+  div.style.flexDirection = "column";
+
+  div.innerHTML = `<strong style="font-size: 1.2em;">${value.title}</strong>
+                   <span style="font-size: 0.95em;">${value.description}</span>
+                   ${!unlocked ? '<em style="font-size: 0.8em;">Non débloqué</em>' : ''}`;
+
+  achievementsContainer.appendChild(div);
+}
+</script>
 </body>
 </html>
