@@ -80,6 +80,24 @@
   <div id="message"></div>
   <div id="stats"></div>
 
+  <button id="btn-pet" style="font-size: 1.5rem; padding: 10px 20px; cursor: pointer;">
+  💨
+</button>
+
+<audio id="audio-pet" src="fart.mp3" preload="auto"></audio>
+
+<script>
+  const btnPet = document.getElementById('btn-pet');
+  const audioPet = document.getElementById('audio-pet');
+
+  btnPet.addEventListener('click', () => {
+    audioPet.volume = 1.0;  // Son fort à fond
+    audioPet.currentTime = 0; // Repart du début si déjà joué
+    audioPet.play();
+  });
+</script>
+
+
   <style>
   #zone-interdite {
     position: fixed;
