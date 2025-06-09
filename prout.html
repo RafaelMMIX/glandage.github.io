@@ -208,6 +208,99 @@
   }
 }
 
+    // Variables globales
+let totalClicks = parseInt(localStorage.getItem("totalClicks")) || 0;
+let resetCount = parseInt(localStorage.getItem("resetCount")) || 0;
+
+// Incrémenter les clics partout
+document.addEventListener("click", () => {
+  totalClicks++;
+  localStorage.setItem("totalClicks", totalClicks);
+});
+
+// Ajouter au reset (si tu as une fonction reset, complète-la avec ça) :
+function ajouterResetCount() {
+  resetCount++;
+  localStorage.setItem("resetCount", resetCount);
+}
+
+// Fonction secrète à taper dans la console
+function devMode() {
+  const secondsPassed = parseInt(localStorage.getItem("chronoGlandeur")) || 0;
+
+  const existing = document.getElementById("dev-mode-box");
+  if (existing) return; // évite doublon
+
+  const devBox = document.createElement("div");
+  devBox.id = "dev-mode-box";
+  devBox.style = `
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background: #111;
+    color: #0f0;
+    padding: 20px;
+    border: 2px solid lime;
+    font-family: monospace;
+    font-size: 14px;
+    border-radius: 10px;
+    z-index: 9999;
+    max-width: 320px;
+    box-shadow: 0 0 20px lime;
+  `;
+
+  devBox.innerHTML = `
+    <h3 style="margin-top: 0;">🛠️ Mode Dev Activé</h3>
+    ⏱️ Temps passé : ${secondsPassed} sec<br>
+    🖱️ Clics totaux : ${totalClicks}<br>
+    🔁 Resets : ${resetCount}<br>
+    ⚠️ <i>Erreur critique : glande absolue détectée</i><br><br>
+    <button onclick="exportLogs()" style="
+      background: lime;
+      border: none;
+      padding: 6px 10px;
+      color: black;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+    ">📄 Exporter les logs</button>
+    <button onclick="document.getElementById('dev-mode-box').remove()" style="
+      margin-left: 5px;
+      background: #444;
+      color: white;
+      border: 1px solid #777;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    ">❌ Fermer</button>
+  `;
+
+  document.body.appendChild(devBox);
+}
+
+// Fonction pour exporter les logs absurdes
+function exportLogs() {
+  const secondsPassed = parseInt(localStorage.getItem("chronoGlandeur")) || 0;
+  const content = `
+=== RAPPORT DE GLANDAGE ===
+Temps total passé : ${secondsPassed} secondes
+Clics effectués : ${totalClicks}
+Nombre de resets : ${resetCount}
+
+Statut : Glandeur certifié™
+Conseil : Hydrate-toi et va dehors.
+============================
+`;
+
+  const blob = new Blob([content], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "rapport_glandeur.txt";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 
     // Mise à jour du chrono chaque seconde
     setInterval(updateTimer, 1000);
