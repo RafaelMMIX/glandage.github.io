@@ -423,5 +423,101 @@ Conseil : Hydrate-toi et va dehors.
     updateTimer(); // Initialisation
   </script>
 
+<div id="achievement-toast" style="display:none; position:fixed; bottom:20px; right:20px; background:#222; color:white; padding:15px 20px; border-radius:10px; box-shadow:0 0 10px black; font-family:sans-serif; z-index:9999; transition: all 0.4s ease;">
+  <strong id="achievement-title">Succès débloqué !</strong><br>
+  <span id="achievement-desc">Description...</span>
+</div>
+
+
+<script>
+const achievements = {
+  "pet_master": {
+    title: "💩 Maître du Pet",
+    description: "Tu fais ça trop bien...",
+    unlocked: false
+  },
+  "rickroll_survivor": {
+    title: "😵 Erreur fatale",
+    description: "Tu n’en sortiras pas indemne.",
+    unlocked: false
+  },
+  "click_spammer": {
+    title: "👆 Spam Master",
+    description: "Tu connais que ce geste toi 😒",
+    unlocked: false
+  },
+  "troll_finder": {
+    title: "🕵️ Détective Troll",
+    description: "Tu as trouvé l’un des secrets...",
+    unlocked: false
+  },
+  "dev_mode": {
+    title: "👻 Tu ne devrais pas être là",
+    description: "Tu touches à ce qu’il ne faut pas.",
+    unlocked: false
+  },
+  "sleepy": {
+    title: "🐢 Trop lent",
+    description: "T'es mort ou quoi ?",
+    unlocked: false
+  }
+};
+
+let globalClicks = 0;
+let petClicks = 0;
+
+function unlockAchievement(key) {
+  if (achievements[key] && !localStorage.getItem("ach_" + key)) {
+    const a = achievements[key];
+    document.getElementById("achievement-title").textContent = a.title;
+    document.getElementById("achievement-desc").textContent = a.description;
+    document.getElementById("achievement-toast").style.display = "block";
+    setTimeout(() => {
+      document.getElementById("achievement-toast").style.display = "none";
+    }, 4000);
+    localStorage.setItem("ach_" + key, "true");
+  }
+}
+
+// 💨 Compteur pour bouton pet
+
+btnPet.addEventListener('click', () => {
+  audioPet.volume = 1.0;
+  audioPet.currentTime = 0;
+  audioPet.play();
+
+  petClicks++;
+  globalClicks++;
+
+  if (petClicks === 10) unlockAchievement("pet_master");
+  if (globalClicks === 50) unlockAchievement("click_spammer");
+});
+
+
+window.addEventListener("keydown", (e) => {
+  trollSequence += e.key.toLowerCase();
+  if (trollSequence.length > secretCode.length) {
+    trollSequence = trollSequence.slice(-secretCode.length);
+  }
+  if (trollSequence === secretCode) {
+    unlockAchievement("troll_finder");
+    window.location.href = "rickroll.html";
+  }
+});
+
+// 😴 Inactivité 5 minutes = succès
+let idleTimeout;
+function resetIdleTimer() {
+  clearTimeout(idleTimeout);
+  idleTimeout = setTimeout(() => {
+    unlockAchievement("sleepy");
+  }, 300000); // 5 minutes
+}
+["mousemove", "keydown", "mousedown"].forEach(event => {
+  document.addEventListener(event, resetIdleTimer);
+});
+resetIdleTimer();
+</script>
+  
 </body>
 </html>
